@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Atividade Prática - Customizando o Jogo da Velha</title>
+  <style>
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .no-print { display: none; }
+      .card { page-break-inside: avoid; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f0f2f5; color: #1c1e21; padding: 20px; line-height: 1.5; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    
+    h1 { text-align: center; color: #1a2a3a; margin-bottom: 10px; font-size: 2rem; border-bottom: 3px solid #3b5998; padding-bottom: 10px; }
+    .subtitle { text-align: center; color: #606770; margin-bottom: 25px; font-weight: 600; }
+
+    /* Bloco do Link e Código Base */
+    .link-card { background: #fff3cd; border: 2px dashed #ffeeba; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center; }
+    .link-btn { display: inline-block; background: #1877f2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 1.1rem; margin-top: 8px; transition: background 0.2s; }
+    .link-btn:hover { background: #166fe5; }
+
+    .code-box-container { background: #1e1e1e; border-radius: 8px; padding: 15px; margin-bottom: 25px; position: relative; }
+    .code-box-header { display: flex; justify-content: space-between; align-items: center; color: #fff; margin-bottom: 10px; font-weight: bold; }
+    .copy-btn { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .copy-btn:hover { background: #219150; }
+    textarea.source-code { width: 100%; height: 180px; background: #252526; color: #d4d4d4; border: 1px solid #3c3c3c; border-radius: 4px; padding: 10px; font-family: 'Consolas', monospace; font-size: 0.85rem; resize: vertical; }
+
+    /* Bloco Passo Zero */
+    .intro-card { background: #e7f3ff; border-left: 6px solid #1877f2; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; }
+    .intro-card h3 { color: #0d5cb6; margin-bottom: 8px; font-size: 1.1rem; }
+    .intro-card ul { margin-left: 20px; color: #1c1e21; }
+
+    /* Categorias por Cores */
+    .section-header { color: #fff; padding: 10px 15px; border-radius: 6px 6px 0 0; font-size: 1.2rem; font-weight: bold; margin-top: 25px; display: flex; align-items: center; gap: 10px; }
+    
+    /* Cores das Seções */
+    .sec-html { background-color: #e67e22; } /* Laranja para HTML */
+    .sec-css { background-color: #2980b9; }  /* Azul para CSS */
+    .sec-js { background-color: #27ae60; }   /* Verde para JavaScript */
+
+    .section-body { border: 2px solid #ccc; border-top: none; border-radius: 0 0 6px 6px; padding: 15px; background: #fafafa; margin-bottom: 20px; }
+
+    /* Cards de Perguntas e Respostas */
+    .card { background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    
+    /* DESTAQUE DA PERGUNTA (Professor) */
+    .question { color: #0d47a1; font-weight: bold; font-size: 1.05rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .question::before { content: "❓"; font-size: 0.9rem; }
+
+    /* DICA DE BUSCA */
+    .search-tag { display: inline-block; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
+
+    /* DESTAQUE DA RESPOSTA/CÓDIGO (Aluno) */
+    .code-label { color: #2e7d32; font-weight: bold; font-size: 0.9rem; margin-top: 8px; margin-bottom: 4px; }
+    pre { background: #1e1e1e; color: #4ec9b0; padding: 10px 12px; border-radius: 6px; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; }
+    pre span.original { color: #ce9178; }
+    pre span.new { color: #b5cea8; font-weight: bold; }
+
+    /* RESULTADO VISUAL */
+    .visual-result { background: #e8f5e9; border-left: 4px solid #2e7d32; color: #1b5e20; padding: 8px 12px; border-radius: 4px; font-size: 0.9rem; margin-top: 10px; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎮 Atividade Prática: Customizando o Jogo da Velha</h1>
+  <p class="subtitle">Plataforma: OnlineGDB | Linguagens: HTML, CSS e JavaScript</p>
+
+  <!-- LINK E CÓDIGO BASE -->
+  <div class="link-card">
+    <strong style="color: #856404; font-size: 1.1rem;">🔗 Acesse o Editor Online:</strong><br>
+    <a href="https://www.onlinegdb.com" target="_blank" class="link-btn">Clique aqui para abrir o OnlineGDB (onlinegdb.com)</a>
+  </div>
+
+  <div class="code-box-container no-print">
+    <div class="code-box-header">
+      <span>📦 Código Inicial do Jogo (Copie para o OnlineGDB):</span>
+      <button class="copy-btn" onclick="copyBaseCode()">📋 Copiar Código</button>
+    </div>
+    <textarea id="base-code" class="source-code" readonly><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Velha Especial</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: linear-gradient(135deg, #1e3c72, #2a5298); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 16px; padding: 30px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); text-align: center; max-width: 450px; width: 100%; }
+    h1 { margin-bottom: 20px; font-size: 2rem; }
+    .setup-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .input-group { display: flex; flex-direction: column; text-align: left; }
+    .input-group label { font-size: 0.85rem; margin-bottom: 4px; }
+    .input-group input { padding: 10px; border-radius: 8px; border: none; outline: none; font-size: 1rem; }
+    .scoreboard { display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 10px; margin-bottom: 15px; font-weight: bold; }
+    .status { font-size: 1.2rem; margin-bottom: 15px; height: 30px; color: #ffd700; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .cell { width: 100%; height: 90px; background: rgba(255, 255, 255, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .cell:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.03); }
+    .cell.x { color: #ff4757; }
+    .cell.o { color: #2ed573; }
+    .controls { display: flex; gap: 10px; }
+    button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
+    button:hover { opacity: 0.9; }
+    .btn-start { background: #2ed573; color: #fff; }
+    .btn-reset { background: #ffa502; color: #fff; }
+    .confetti-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; overflow: hidden; z-index: 999; }
+    .confetti { position: absolute; width: 10px; height: 15px; opacity: 0.8; animation: fall 3s linear infinite; }
+    @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); } 100% { transform: translateY(105vh) rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jogo da Velha</h1>
+    <div id="setup" class="setup-form">
+      <div class="input-group">
+        <label for="player1">Jogador X</label>
+        <input type="text" id="player1" placeholder="Nome do Jogador 1" value="Jogador 1">
+      </div>
+      <div class="input-group">
+        <label for="player2">Jogador O</label>
+        <input type="text" id="player2" placeholder="Nome do Jogador 2" value="Jogador 2">
+      </div>
+      <button class="btn-start" onclick="startGame()">Iniciar Jogo</button>
+    </div>
+    <div id="game-area" style="display: none;">
+      <div class="scoreboard">
+        <div><span id="p1-display">X</span>: <span id="score-x">0</span></div>
+        <div><span id="p2-display">O</span>: <span id="score-o">0</span></div>
+      </div>
+      <div id="status" class="status">Vez de: ...</div>
+      <div class="board" id="board">
+        <div class="cell" onclick="makeMove(0)"></div>
+        <div class="cell" onclick="makeMove(1)"></div>
+        <div class="cell" onclick="makeMove(2)"></div>
+        <div class="cell" onclick="makeMove(3)"></div>
+        <div class="cell" onclick="makeMove(4)"></div>
+        <div class="cell" onclick="makeMove(5)"></div>
+        <div class="cell" onclick="makeMove(6)"></div>
+        <div class="cell" onclick="makeMove(7)"></div>
+        <div class="cell" onclick="makeMove(8)"></div>
+      </div>
+      <div class="controls">
+        <button class="btn-reset" onclick="resetBoard()">Próxima Rodada</button>
+        <button class="btn-start" onclick="resetAll()">Trocar Jogadores</button>
+      </div>
+    </div>
+  </div>
+  <div id="confetti-container" class="confetti-container"></div>
+  <script>
+    let player1Name = ""; player2Name = ""; let currentPlayer = "X";
+    let boardState = ["", "", "", "", "", "", "", "", ""];
+    let isGameActive = false; let scoreX = 0; let scoreO = 0;
+    const winningConditions = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    function startGame() {
+      const p1Input = document.getElementById("player1").value.trim();
+      const p2Input = document.getElementById("player2").value.trim();
+      player1Name = p1Input !== "" ? p1Input : "Jogador 1";
+      player2Name = p2Input !== "" ? p2Input : "Jogador 2";
+      document.getElementById("p1-display").innerText = player1Name;
+      document.getElementById("p2-display").innerText = player2Name;
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game-area").style.display = "block";
+      resetBoard();
+    }
+    function makeMove(cellIndex) {
+      if (boardState[cellIndex] !== "" || !isGameActive) return;
+      boardState[cellIndex] = currentPlayer;
+      const cells = document.querySelectorAll(".cell");
+      cells[cellIndex].innerText = currentPlayer;
+      cells[cellIndex].classList.add(currentPlayer.toLowerCase());
+      checkResult();
+    }
+    function checkResult() {
+      let roundWon = false;
+      for (let condition of winningConditions) {
+        let a = boardState[condition[0]], b = boardState[condition[1]], c = boardState[condition[2]];
+        if (a === "" || b === "" || c === "") continue;
+        if (a === b && b === c) { roundWon = true; break; }
+      }
+      if (roundWon) {
+        const winnerName = currentPlayer === "X" ? player1Name : player2Name;
+        document.getElementById("status").innerText = `🎉 ${winnerName} Venceu! 🎉`;
+        isGameActive = false;
+        if (currentPlayer === "X") { scoreX++; document.getElementById("score-x").innerText = scoreX; }
+        else { scoreO++; document.getElementById("score-o").innerText = scoreO; }
+        triggerConfettiWall(); return;
+      }
+      if (!boardState.includes("")) { document.getElementById("status").innerText = "Empate!"; isGameActive = false; return; }
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      updateStatus();
+    }
+    function updateStatus() {
+      const currentName = currentPlayer === "X" ? player1Name : player2Name;
+      document.getElementById("status").innerText = `Vez de: ${currentName} (${currentPlayer})`;
+    }
+    function resetBoard() {
+      boardState = ["", "", "", "", "", "", "", "", ""];
+      isGameActive = true; currentPlayer = "X";
+      const cells = document.querySelectorAll(".cell");
+      cells.forEach(cell => { cell.innerText = ""; cell.classList.remove("x", "o"); });
+      stopConfetti(); updateStatus();
+    }
+    function resetAll() {
+      scoreX = 0; scoreO = 0;
+      document.getElementById("score-x").innerText = "0"; document.getElementById("score-o").innerText = "0";
+      document.getElementById("setup").style.display = "flex"; document.getElementById("game-area").style.display = "none";
+      stopConfetti();
+    }
+    function triggerConfettiWall() {
+      const container = document.getElementById("confetti-container"); container.innerHTML = "";
+      const colors = ["#ff4757", "#2ed573", "#ffa502", "#1e90ff", "#ed4245", "#eccc68"];
+      for (let i = 0; i < 120; i++) {
+        const confetti = document.createElement("div"); confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + "s";
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+        container.appendChild(confetti);
+      }
+    }
+    function stopConfetti() { document.getElementById("confetti-container").innerHTML = ""; }
+  </script>
+</body>
+</html></textarea>
+  </div>
+
+  <!-- PASSO ZERO -->
+  <div class="intro-card">
+    <h3>⚙️ PASSO ZERO: Configuração Inicial no OnlineGDB</h3>
+    <ul>
+      <li>Acesse <strong>onlinegdb.com</strong>.</li>
+      <li>No canto superior direito (<strong>Language</strong>), mude para <strong>HTML/JS/CSS</strong>.</li>
+      <li>Apague o código padrão, cole o código do jogo acima e clique no botão verde <strong>RUN</strong>.</li>
+      <li><strong>Regra de Ouro:</strong> A cada alteração feita, clique em <strong>RUN</strong> e veja o resultado no jogo!</li>
+      <li><strong>Como buscar o código:</strong> Aperte <code>Ctrl + F</code> no teclado e digite o texto da caixa amarela.</li>
+    </ul>
+  </div>
+
+  <!-- SEÇÃO 1: HTML -->
+  <div class="section-header sec-html">📄 SEÇÃO 1: ALTERAÇÕES NO HTML (Estrutura do Jogo)</div>
+  <div class="section-body">
+    <div class="card">
+      <div class="question">1. Como alterar o título principal que aparece no topo da página do jogo?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): &lt;h1&gt;</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+<!-- ORIGINAL -->
+<span class="original">&lt;h1&gt;Jogo da Velha&lt;/h1&gt;</span>
+
+<!-- NOVO -->
+<span class="new">&lt;h1&gt;Super Jogo do [Seu Nome]&lt;/h1&gt;</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. O título principal no topo da página mudou de nome!</div>
+    </div>
+
+    <div class="card">
+      <div class="question">2. Como mudar os textos de instrução das caixas de cadastro dos jogadores?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): Jogador X</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+<!-- ORIGINAL -->
+<span class="original">&lt;label for="player1"&gt;Jogador X&lt;/label&gt;
+&lt;label for="player2"&gt;Jogador O&lt;/label&gt;</span>
+
+<!-- NOVO -->
+<span class="new">&lt;label for="player1"&gt;Primeiro Jogador (Letra A):&lt;/label&gt;
+&lt;label for="player2"&gt;Segundo Jogador (Letra B):&lt;/label&gt;</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. Os textos sobre as caixas de digitar o nome mudaram.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">3. Como personalizar o texto e adicionar um emoji no botão de entrada do jogo?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): Iniciar Jogo</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+<!-- ORIGINAL -->
+<span class="original">&lt;button class="btn-start" onclick="startGame()"&gt;Iniciar Jogo&lt;/button&gt;</span>
+
+<!-- NOVO -->
+<span class="new">&lt;button class="btn-start" onclick="startGame()"&gt;COMEÇAR A BATALHA! ⚔️&lt;/button&gt;</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. O botão verde inicial ganhou um novo texto com emoji.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">4. Como alterar o texto dos botões que aparecem abaixo do placar do jogo?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): Próxima Rodada</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+<!-- ORIGINAL -->
+<span class="original">&lt;button class="btn-reset" onclick="resetBoard()"&gt;Próxima Rodada&lt;/button&gt;
+&lt;button class="btn-start" onclick="resetAll()"&gt;Trocar Jogadores&lt;/button&gt;</span>
+
+<!-- NOVO -->
+<span class="new">&lt;button class="btn-reset" onclick="resetBoard()"&gt;Jogar Novamente 🔄&lt;/button&gt;
+&lt;button class="btn-start" onclick="resetAll()"&gt;Sair do Jogo 🚪&lt;/button&gt;</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN, entre no jogo e veja os botões de baixo modificados.</div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 2: CSS -->
+  <div class="section-header sec-css">🎨 SEÇÃO 2: ALTERAÇÕES NO CSS (Visual e Cores)</div>
+  <div class="section-body">
+    <div class="card">
+      <div class="question">5. Como modificar a cor do fundo da tela do jogo usando um novo gradiente?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): linear-gradient</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+/* ORIGINAL */
+<span class="original">background: linear-gradient(135deg, #1e3c72, #2a5298);</span>
+
+/* NOVO */
+<span class="new">background: linear-gradient(135deg, #8e44ad, #ff007f);</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. O fundo da página mudou para Roxo e Rosa Neon!</div>
+    </div>
+
+    <div class="card">
+      <div class="question">6. Como mudar a classe e a cor da primeira letra personalizada (ex: Letra A)?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): .cell.x</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+/* ORIGINAL */
+<span class="original">.cell.x { color: #ff4757; }</span>
+
+/* NOVO */
+<span class="new">.cell.a { color: #ff007f; }</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. Quando o Jogador 1 jogar, a letra aparecerá em Rosa Pink.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">7. Como mudar a classe e a cor da segunda letra personalizada (ex: Letra B)?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): .cell.o</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+/* ORIGINAL */
+<span class="original">.cell.o { color: #2ed573; }</span>
+
+/* NOVO */
+<span class="new">.cell.b { color: #00e5ff; }</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. Quando o Jogador 2 jogar, a letra aparecerá em Azul Ciano.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">8. Como deixar os quadrados do tabuleiro com bordas totalmente arredondadas?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): border-radius: 12px;</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+/* ORIGINAL */
+<span class="original">border-radius: 12px;</span>
+
+/* NOVO */
+<span class="new">border-radius: 50px;</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. Os 9 quadrados ganharam um formato arredondado estilo cápsula.</div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 3: JAVASCRIPT -->
+  <div class="section-header sec-js">⚡ SEÇÃO 3: ALTERAÇÕES NO JAVASCRIPT (Lógica do Jogo)</div>
+  <div class="section-body">
+    <div class="card">
+      <div class="question">9. Como alterar a variável inicial para o jogo começar com a nova letra escolhida?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): let currentPlayer</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+// ORIGINAL
+<span class="original">let currentPlayer = "X";</span>
+
+// NOVO
+<span class="new">let currentPlayer = "A";</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN e clique no tabuleiro. Agora aparece a letra A em vez de X.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">10. Como atualizar a regra de troca de turnos entre as novas letras (A e B)?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): === "X"</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+// ORIGINAL
+<span class="original">currentPlayer = currentPlayer === "X" ? "O" : "X";</span>
+
+// NOVO
+<span class="new">currentPlayer = currentPlayer === "A" ? "B" : "A";</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN. A primeira jogada coloca a letra A e a segunda coloca a letra B.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">11. Como ajustar a verificação de vitória para anunciar o vencedor correto?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): winnerName =</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+// ORIGINAL
+<span class="original">const winnerName = currentPlayer === "X" ? player1Name : player2Name;</span>
+
+// NOVO
+<span class="new">const winnerName = currentPlayer === "A" ? player1Name : player2Name;</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN e vença a partida. A mensagem de vitória exibirá o nome certo.</div>
+    </div>
+
+    <div class="card">
+      <div class="question">12. Como garantir que a nova rodada recomece com a letra inicial escolhida?</div>
+      <div class="search-tag">🔍 Busca (Ctrl + F): function resetBoard</div>
+      <div class="code-label">✏️ Código Antes vs. Depois:</div>
+      <pre>
+// ORIGINAL (dentro de resetBoard)
+<span class="original">currentPlayer = "X";</span>
+
+// NOVO
+<span class="new">currentPlayer = "A";</span></pre>
+      <div class="visual-result">👁️ Resultado Visual: Clique em RUN, vença uma partida e clique em Jogar Novamente. A nova partida começará com A.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function copyBaseCode() {
+    const codeArea = document.getElementById("base-code");
+    codeArea.select();
+    document.execCommand("copy");
+    alert("Código copiado! Agora cole no OnlineGDB.");
+  }
+</script>
+
+</body>
+</html>
